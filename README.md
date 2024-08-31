@@ -24,6 +24,12 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
-header footer 
-data keluaran 100 bisa 2 page lebih tanpa terpotong
-responsive
+Source Code & Libary digunakan 🎉
+🌟 Vue.JS & Vuedraggable
+🌟 Golang Cors, Gin, & Gotenberg (docker) 
+
+2024/08/30 17:00:19 PDF rendering completed in 2.189377125s
+
+```
+docker run --rm -p 3001:3000 thecodingmachine/gotenberg:7
+```
