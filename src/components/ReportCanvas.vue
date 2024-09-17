@@ -54,6 +54,41 @@
                     <input type="number" v-model.number="elements[selectedElement].width" />
                     <label>Height:</label>
                     <input type="number" v-model.number="elements[selectedElement].height" />
+
+                    <h3>Edit Style</h3>
+
+                    <!-- Bold -->
+                    <label>
+                        <input type="checkbox" v-model="elements[selectedElement].style.fontWeight" true-value="bold"
+                            false-value="normal" />
+                        Bold
+                    </label>
+
+                    <!-- Italic -->
+                    <label>
+                        <input type="checkbox" v-model="elements[selectedElement].style.fontStyle" true-value="italic"
+                            false-value="normal" />
+                        Italic
+                    </label>
+
+                    <!-- Underline -->
+                    <label>
+                        <input type="checkbox" v-model="elements[selectedElement].style.textDecoration"
+                            true-value="underline" false-value="none" />
+                        Underline
+                    </label>
+
+                    <!-- Text Alignment -->
+                    <label>Text Alignment:</label>
+                    <select v-model="elements[selectedElement].style.textAlign">
+                        <option value="left">Left</option>
+                        <option value="center">Center</option>
+                        <option value="right">Right</option>
+                    </select>
+
+                    <!-- Font Size -->
+                    <label>Font Size:</label>
+                    <input type="number" v-model.number="elements[selectedElement].style.fontSize" />
                 </div>
             </div>
         </div>
@@ -66,10 +101,19 @@
                     <template v-slot:item="{ element, index }">
                         <div draggable="true" :key="getItemKey(element, index)" @dragstart="onDragStart($event, index)"
                             @click="selectElement(index)" :style="getElementStyle(element)" class="element">
-                            <span v-if="element.type === 'text'">
-                                <!-- {{ element.content }} -->
-                                {{ parseTextContent(element.content) }}
-                            </span>
+                            <div v-if="element.type === 'text'">
+                                <div :style="{
+                                        fontWeight: element.style.fontWeight,
+                                        fontStyle: element.style.fontStyle,
+                                        textDecoration: element.style.textDecoration,
+                                        textAlign: element.style.textAlign,
+                                        fontSize: element.style.fontSize + 'px'
+                                    }"
+                                >
+                                    {{ parseTextContent(element.content) }}
+
+                                </div>
+                            </div>
                             <span v-if="element.type === 'field'">
                                 {{ payloadData[element.field] !== undefined ? payloadData[element.field] : `Field
                                 ${element.field} not found` }}
@@ -404,8 +448,20 @@ export default {
                 const adjustedY = tableFound ? yOffset : element.y - (currentPage - 1) * pageHeight;
 
                 if (element.type === 'text' || element.type === 'field') {
+                    const fontWeight = element.style.fontWeight || 'normal';
+    const fontStyle = element.style.fontStyle || 'normal';
+    const textDecoration = element.style.textDecoration || 'none';
+    const textAlign = element.style.textAlign || 'left';
+    const fontSize = element.style.fontSize ? `${element.style.fontSize}px` : '14px';
+    
                     elementHtml = `
-        <div class="canvas-element" style="left: ${element.x}px; top: ${adjustedY}px; font-size: 14px;">
+        <div class="canvas-element" style="left: ${element.x}px; 
+                top: ${adjustedY}px; 
+                font-size: ${fontSize}; 
+                font-weight: ${fontWeight}; 
+                font-style: ${fontStyle}; 
+                text-decoration: ${textDecoration}; 
+                text-align: ${textAlign};">
           ${element.content || `{${element.field}}`}
         </div>`;
                 } else if (element.type === 'image') {
@@ -639,6 +695,7 @@ export default {
                 y: 20,
                 width: 150,
                 height: 30,
+                style: {},
                 isTitle: false,
                 isHeader: false,
                 isBody: false,
@@ -655,6 +712,7 @@ export default {
                 y: 20,
                 width: 150,
                 height: 150,
+                style: {},
                 isHeader: false,
                 isBody: false,
                 isFooter: false,
@@ -674,6 +732,7 @@ export default {
                 y: 20,
                 width: 600,
                 height: 200,
+                style: {},
                 isHeader: false,
                 isBody: false,
                 isFooter: false,
